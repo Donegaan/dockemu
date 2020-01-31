@@ -14,9 +14,9 @@ containers=0
 docker_image="to_dockemu:protocols"
 
 
-docker_simple="docker run --privileged -i -t -d --net=none --name docker-$id $docker_image "
+docker_simple="docker run --privileged --cap-add=NET_ADMIN -i -t -d --net=none --name docker-$id $docker_image "
 #echo $docker_simple
-docker_complex="docker run -v $(pwd)/logs:/var/log  --privileged -d  --net=none --name docker-$id $docker_image "
+docker_complex="docker run -v $(pwd)/logs:/var/log  --privileged --cap-add=NET_ADMIN -d  --net=none --name docker-$id $docker_image "
 
 ## deberian ser leidas del conf file
 #GENERAL
@@ -244,9 +244,9 @@ create(){
 				if [ ! -e $(pwd)/logs/$id/ ];then
 					mkdir $(pwd)/logs/$id/
 				fi
-				contain=$(docker run -v  $(pwd)/logs/$id/:/var/log/supervisor/ --privileged  -d --net=none --name dockemu-$id $docker_image )
+				contain=$(docker run -v  $(pwd)/logs/$id/:/var/log/supervisor/ --privileged --cap-add=NET_ADMIN -d --net=none --name dockemu-$id $docker_image )
 			else
-				contain=$(docker run --privileged  -d --net=none --name dockemu-$id $docker_image )
+				contain=$(docker run --privileged --cap-add=NET_ADMIN -d --net=none --name dockemu-$id $docker_image )
 			fi
 
 		#docker run --privileged -i -t -d --net=none --name docker-$id $docker_image -t $type -i $id #&& #2>/dev/null
