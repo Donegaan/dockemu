@@ -2,8 +2,8 @@
 #NAME: naet.sh
 #AUTHOR: Marcos Cano  2015
 #CONTACT INFO: jmarcos.cano@gmail.com , marcos.cano@galileo.edu
-#VERSION: 1.0 
-#DESCRIPTION: 
+#VERSION: 1.0
+#DESCRIPTION:
 
 
 
@@ -20,7 +20,7 @@ docker_complex="docker run -v $(pwd)/logs:/var/log  --privileged -d  --net=none 
 
 ## deberian ser leidas del conf file
 #GENERAL
-waf_path=/home/emulation/repos/ns-3-allinone/ns-3-dev/
+waf_path=~/ns-3-allinone/ns-3-dev/
 verbose=false
 logfile="logs/naet.log"
 persistence=true
@@ -48,13 +48,13 @@ bmx6_netmask=255.0.0.0
 
 
 
-if $verbose;then 
+if $verbose;then
 	set -x
 fi
-# if [[ $USER != "root" ]]; then 
-# 		echo "This script must be run as root!" 
+# if [[ $USER != "root" ]]; then
+# 		echo "This script must be run as root!"
 # 		exit 1
-# fi 
+# fi
 
 
 #tools()
@@ -90,13 +90,13 @@ echo  ""
 usage(){
 
 	cat <<-EOU
-	usage :   $0  [OPTIONS]  
+	usage :   $0  [OPTIONS]
 
 	OPTIONS:
 	    start|--start|-start|-s|--s    <config file>               starts NAET with a config file  :)
 
         attach 	container-ID							           attach to a given container
-        
+
         list                                                       list running containers
 
 	    destroy|--destroy|-destroy|-d|--d  <all| containerID>      destroys a containerID or all
@@ -104,7 +104,7 @@ usage(){
 	    -print                                                     prints the current configuration
 
 	    -help,-h,--help                                            prints this message
-	
+
 
 	NOTE: if no configuration file is provided  while start it will use the default one
 
@@ -159,7 +159,7 @@ destroy(){
 	#lxc-destroy -n container-${id}
 	###bridge down
 		#docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q)
-	
+
 
 	if [ "$id" = "all" ];then
 		while read line
@@ -186,16 +186,16 @@ destroy(){
 		docker kill dockemu-$id #2>/dev/null
 		docker rm dockemu-$id  #2>/dev/null
 	fi
-	
+
 }
 
 
 #######################
 # create()
 # description:
-# ID = $1 
-# note: the number or name of the container and 
-# all interfaces linked to it, 
+# ID = $1
+# note: the number or name of the container and
+# all interfaces linked to it,
 # TYPE = $2
 # should contain the type of the container
 # i.e: olsrd ,  bmx6
@@ -203,10 +203,10 @@ destroy(){
 #######################
 
 count=1
-create(){	
+create(){
 		#read -p ""
 		# type=$2
-		# if [ ! -z "$type" ];then	
+		# if [ ! -z "$type" ];then
 		# 	id=$type-$1
 		# else
 		# 	id=$1
@@ -215,15 +215,15 @@ create(){
 		id=$1
 		echo $id >> logs/running.log
 		#type=$(echo $id |tr "-" " "|awk '{print $1}')
-		
+
 		### SET VARIABLES
 		bridge="br-${id}"
 		tap="tap-${id}"
 		sideA="$id-A"
 		sideB="$id-B"
-		
+
 		#echo $bridge $tap $sideB $sideA
-		
+
 		#make sure everything is destroyed before creating it.
 		destroy $id &>/dev/null
 		### CREATE OUTER BRIDGES
@@ -240,10 +240,10 @@ create(){
 		#try
 		{
 			if  $persistence ;then
-				
+
 				if [ ! -e $(pwd)/logs/$id/ ];then
 					mkdir $(pwd)/logs/$id/
-				fi 
+				fi
 				contain=$(docker run -v  $(pwd)/logs/$id/:/var/log/supervisor/ --privileged  -d --net=none --name dockemu-$id $docker_image )
 			else
 				contain=$(docker run --privileged  -d --net=none --name dockemu-$id $docker_image )
@@ -258,10 +258,10 @@ create(){
 			echo "DOCKER issues creating docker-$id"
 			#exit 0
 		}
-		
+
 
 		pid=$(docker inspect -f '{{.State.Pid}}' dockemu-${id} )
-		mkdir -p /var/run/netns 
+		mkdir -p /var/run/netns
 		ln -s /proc/$pid/ns/net /var/run/netns/$pid
 
 		ip link add $sideA type veth peer name $sideB
@@ -330,11 +330,11 @@ start_waf(){
 }
 
 start(){
-	
+
 	type=$1
 	type_count=$2
 	### while OLSRD containers
-	echo 
+	echo
 	echo "#####  $type START  ##### "
 
 ### CREATE
@@ -346,7 +346,7 @@ start(){
 		list=$list" $type-$j "
 		idi=${type}-$j
 		create $idi
-		j=$[$j+1]	
+		j=$[$j+1]
 	done
 
 
@@ -365,7 +365,7 @@ start(){
 		j=$[$j+1]
 	done
 
-	
+
 
 	start_waf
 
@@ -394,7 +394,7 @@ start(){
 conf_file=conf/dockemu.conf
 
 if [ $# -gt 0 ] ;then
-	
+
 	args=$@
 	case $1 in
 		start|--start|-start|-s|--s)
@@ -415,7 +415,7 @@ if [ $# -gt 0 ] ;then
 				else
 					echo "conf file: '$conf_file' NOT FOUND"
 					exit 0
-				fi	
+				fi
 			else
 				echo [ERROR] config file not provided
 				usage
@@ -431,7 +431,7 @@ if [ $# -gt 0 ] ;then
 				echo "[ERROR] destroy all or a specific ID?"
 				exit 0
 			fi
-		;;	
+		;;
 		attach)
 
 			if [ ! -z $2 ];then
