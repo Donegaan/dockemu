@@ -171,9 +171,9 @@ destroy(){
 	else
 		ifconfig "br-${id}" down #2>/dev/null
 		###rm taps from bridges
-		brctl delif "br-${id}" "tap-${id}" #2>/dev/null
+		sudo brctl delif "br-${id}" "tap-${id}" #2>/dev/null
 		###destroy the bridges
-		brctl delbr "br-${id}"  #2>/dev/null
+		sudo brctl delbr "br-${id}"  #2>/dev/null
 		###taps down
 		ifconfig "tap-${id}" down  #2>/dev/null
 		###delete taps
@@ -227,10 +227,10 @@ create(){
 		#make sure everything is destroyed before creating it.
 		destroy $id &>/dev/null
 		### CREATE OUTER BRIDGES
-		brctl addbr $bridge \
+		sudo brctl addbr $bridge \
 		&& tunctl -t $tap \
 		&& ifconfig $tap 0.0.0.0 promisc up \
-		&& brctl addif $bridge $tap \
+		&& sudo brctl addif $bridge $tap \
 		&& ifconfig $bridge up  &>/dev/null
 
 		#echo "outer bridge $bridge created"
@@ -265,7 +265,7 @@ create(){
 		ln -s /proc/$pid/ns/net /var/run/netns/$pid
 
 		ip link add $sideA type veth peer name $sideB
-		brctl addif $bridge $sideA
+		sudo brctl addif $bridge $sideA
 		ip link set $sideB netns $pid
 		ip netns exec $pid ip link set dev $sideB name eth0
 		ip netns exec $pid ip link set eth0 up
