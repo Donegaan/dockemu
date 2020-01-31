@@ -177,7 +177,7 @@ destroy(){
 		###taps down
 		ifconfig "tap-${id}" down  #2>/dev/null
 		###delete taps
-		tunctl -d "tap-${id}" # 2>/dev/null
+		sudo tunctl -d "tap-${id}" # 2>/dev/null
 		##delete iplink
 		ip link del "${id}-A" # 2>/dev/null
 		ip link del "${id}-B"  #2>/dev/null
@@ -228,7 +228,7 @@ create(){
 		destroy $id &>/dev/null
 		### CREATE OUTER BRIDGES
 		sudo brctl addbr $bridge \
-		&& tunctl -t $tap \
+		&& sudo tunctl -t $tap \
 		&& ifconfig $tap 0.0.0.0 promisc up \
 		&& sudo brctl addif $bridge $tap \
 		&& ifconfig $bridge up  &>/dev/null
