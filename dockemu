@@ -169,13 +169,13 @@ destroy(){
 		    destroy $name
 		done < logs/running.log
 	else
-		ifconfig "br-${id}" down #2>/dev/null
+		sudo ifconfig "br-${id}" down #2>/dev/null
 		###rm taps from bridges
 		sudo brctl delif "br-${id}" "tap-${id}" #2>/dev/null
 		###destroy the bridges
 		sudo brctl delbr "br-${id}"  #2>/dev/null
 		###taps down
-		ifconfig "tap-${id}" down  #2>/dev/null
+		sudo ifconfig "tap-${id}" down  #2>/dev/null
 		###delete taps
 		sudo tunctl -d "tap-${id}" # 2>/dev/null
 		##delete iplink
@@ -229,9 +229,9 @@ create(){
 		### CREATE OUTER BRIDGES
 		sudo brctl addbr $bridge \
 		&& sudo tunctl -t $tap \
-		&& ifconfig $tap 0.0.0.0 promisc up \
+		&& sudo ifconfig $tap 0.0.0.0 promisc up \
 		&& sudo brctl addif $bridge $tap \
-		&& ifconfig $bridge up  &>/dev/null
+		&& sudo ifconfig $bridge up  &>/dev/null
 
 		#echo "outer bridge $bridge created"
 		log "BRIDGES: br: $bridge tap: $tap CREATED"

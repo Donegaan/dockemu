@@ -28,19 +28,19 @@ wait_interface(){
 
 usage(){
 cat <<-ENDOFMESSAGE
-			usage: docker run <options> docker_image_name  [OPTION...] 
+			usage: docker run <options> docker_image_name  [OPTION...]
 
 			        OPTIONS:
-			                -t <type>:      start a container type. 
+			                -t <type>:      start a container type.
 			                                type can be: olsrd, OLSRD, BMX6 or bmx6.
-			                -i <id_number>: provide the id of the container, 
+			                -i <id_number>: provide the id of the container,
 			                                defaults to a Random Number
 			                -h:             display this message
 
 
-			        NOTE:   if no parameters are provided 
+			        NOTE:   if no parameters are provided
 			                the defaults are BMX6 and a random id.
-			
+
 ENDOFMESSAGE
 
 }
@@ -57,7 +57,7 @@ while getopts ht:i: opt; do
 					cmd="bmx6 debug=0 dev=$interface"
 					;;
 				"olsrd"|"OLSRD"|"o"|"O")
-					echo "OLSR container selected" 
+					echo "OLSR container selected"
 					type="olsrd"
 					cmd="olsrd -f /etc/olsrd/olsrd.conf -i $interface -nofork"
 					;;
@@ -71,13 +71,13 @@ while getopts ht:i: opt; do
 					;;
 		   	esac
 		  ;;
-		
+
 		i)
-			
+
 			#if [ "$OPTARG" -eq "$OPTARG" ] 2>/dev/null; then
-				id_provided=true	
-				id=$OPTARG			
-			#else	
+				id_provided=true
+				id=$OPTARG
+			#else
 				#echo "id '$OPTARG' is NAN"
   				#usage
   				#exit 0
@@ -104,7 +104,7 @@ start(){
 	echo " " > $log_file
 	chmod 775 $log_file
 
-	ifconfig $interface | tee -a $log_file
+	sudo ifconfig $interface | tee -a $log_file
 
 	echo "LOGFILE: $log_file" |tee -a $log_file
 
@@ -114,7 +114,7 @@ start(){
 			;;
 		"olsrd")
 			echo "OLSR container selected" |tee -a $log_file
-			;;	
+			;;
 	esac
 
 
