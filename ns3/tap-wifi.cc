@@ -155,14 +155,11 @@ int main(int argc, char *argv[])
   tapBridge.Install(nodes.Get(1), devices.Get(1));
   tapBridge.SetAttribute('DeviceName', StringValue('tap-olsrd-0'));
   tapBridge.Install(nodes.Get(0), devices.Get(0));
-  $text
-      $text
-          $text
 
-              //
-              // Run the simulation for ten minutes to give the user time to play around
-              //
-              Simulator::Stop(Seconds(600.));
+  //
+  // Run the simulation for ten minutes to give the user time to play around
+  //
+  Simulator::Stop(Seconds(600.));
   Simulator::Run();
   Simulator::Destroy();
 }
