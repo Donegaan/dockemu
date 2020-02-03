@@ -23,7 +23,7 @@ container_log_path=log/
 
 
 config_files_path="conf/"
-template_file="ns3/tap-csma"
+template_file="ns3/tap-wifi"
 container_expr="container"
 network="10.0.0.0"
 netmask="/8"
