@@ -30,15 +30,15 @@ netmask="/8"
 
 
 ### OLSRD DEFAULTS
-olsr_containers=2
-olsr_network=10.0.0.0
-olsr_etmask=255.0.0.0
+num_containers=2
+# olsr_network=10.0.0.0
+# olsr_etmask=255.0.0.0
 
 
 ###BMX6
-bmx6_containers=2
-bmx6_network=10.0.0.0
-bmx6_netmask=255.0.0.0
+# bmx6_containers=2
+# bmx6_network=10.0.0.0
+# bmx6_netmask=255.0.0.0
 
 
 
@@ -345,9 +345,9 @@ start(){
 	done
 
 
-### TEMAPLATE
+### TEMPLATE
 	cp $template_file $template_file.cc
-	sed -i "s=nodes.Create(2);=nodes.Create($olsr_containers);=" $template_file.cc
+	sed -i "s=nodes.Create(2);=nodes.Create($num_containers);=" $template_file.cc
 	#new thing
 	sed -i "s=Simulator::Stop (Seconds (600.));=Simulator::Stop (Seconds ($runningTime.));="  $template_file.cc
 
@@ -404,7 +404,7 @@ if [ $# -gt 0 ] ;then
 					#echo "lets read it"
 					config_reader $conf_file
 					#step 2:
-					start olsrd $olsr_containers
+					start olsrd $num_containers
 
 
 				else
